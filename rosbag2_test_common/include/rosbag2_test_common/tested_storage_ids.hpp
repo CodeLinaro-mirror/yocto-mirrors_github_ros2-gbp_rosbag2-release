@@ -14,12 +14,9 @@
 
 #ifndef ROSBAG2_TEST_COMMON__TESTED_STORAGE_IDS_HPP_
 #define ROSBAG2_TEST_COMMON__TESTED_STORAGE_IDS_HPP_
-
 #include <array>
-#include <stdexcept>
 #include <string>
-#include <unordered_map>
-#include <utility>
+
 
 namespace rosbag2_test_common
 {
@@ -28,27 +25,13 @@ static const std::array<std::string, 2> kTestedStorageIDs = {
   "mcap",
 };
 
-static const std::array<std::pair<std::string, std::string>, 2> kTestedStorageIDsWithExtensions = {
-  {
-    {"sqlite3", ".db3"},
-    {"mcap", ".mcap"}
-  }
-};
-
-static const std::unordered_map<std::string, std::string> kTestedStorageIDsToExtensions = {
-  {"sqlite3", ".db3"},
-  {"mcap", ".mcap"}
-};
-
-/// \brief Get the filename for a bag file based on the storage id.
-/// The filename is constructed as <name><extension>, where the extension is determined by the
-/// storage id.
-inline std::string
-bag_filename_for_storage_id(const std::string & name, const std::string & storage_id)
+std::string bag_filename_for_storage_id(const std::string & name, const std::string & storage_id)
 {
-  for (const auto & [id, ext] : kTestedStorageIDsWithExtensions) {
-    if (id == storage_id) {
-      return name + ext;
+  const std::array<std::string, 2> extensions = {".db3", ".mcap"};
+  static_assert(kTestedStorageIDs.size() == extensions.size());
+  for (size_t i = 0; i < extensions.size(); ++i) {
+    if (kTestedStorageIDs[i] == storage_id) {
+      return name + extensions[i];
     }
   }
   throw std::runtime_error("unknown storage id: " + storage_id);

@@ -27,12 +27,10 @@ namespace rosbag2_cpp
 namespace cache
 {
 
-CircularMessageCache::CircularMessageCache(size_t max_buffer_size, uint32_t max_buffer_duration)
+CircularMessageCache::CircularMessageCache(size_t max_buffer_size)
 {
-  producer_buffer_ =
-    std::make_shared<MessageCacheCircularBuffer>(max_buffer_size, max_buffer_duration);
-  consumer_buffer_ =
-    std::make_shared<MessageCacheCircularBuffer>(max_buffer_size, max_buffer_duration);
+  producer_buffer_ = std::make_shared<MessageCacheCircularBuffer>(max_buffer_size);
+  consumer_buffer_ = std::make_shared<MessageCacheCircularBuffer>(max_buffer_size);
 }
 
 CircularMessageCache::~CircularMessageCache()
@@ -42,10 +40,10 @@ CircularMessageCache::~CircularMessageCache()
   cache_condition_var_.notify_one();
 }
 
-bool CircularMessageCache::push(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> msg)
+void CircularMessageCache::push(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> msg)
 {
   std::lock_guard<std::mutex> cache_lock(producer_buffer_mutex_);
-  return producer_buffer_->push(msg);
+  (void)producer_buffer_->push(std::move(msg));
 }
 
 std::shared_ptr<CacheBufferInterface> CircularMessageCache::get_consumer_buffer()

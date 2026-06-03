@@ -38,38 +38,38 @@ def test_reset_filter(storage_id):
     storage_filter = rosbag2_py.StorageFilter(topics=['AAA', 'CCC', 'DDD'])
     reader.set_filter(storage_filter)
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'AAA'
-    assert recv_ts == 1001
+    assert t == 1001
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'CCC'
-    assert recv_ts == 1002
+    assert t == 1002
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'AAA'
-    assert recv_ts == 1004
+    assert t == 1004
 
     # No filter and bag continues same location
     reader.reset_filter()
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'FFF'
-    assert recv_ts == 1004
+    assert t == 1004
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'BBB'
-    assert recv_ts == 1004
+    assert t == 1004
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'EEE'
-    assert recv_ts == 1005
+    assert t == 1005
 
 
 @pytest.mark.parametrize('storage_id', TESTED_STORAGE_IDS)
@@ -83,29 +83,29 @@ def test_seek_forward(storage_id):
     # seek forward
     reader.seek(1822)
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'CCC'
-    assert recv_ts == 1822
+    assert t == 1822
 
     # set filter continues in same location
     storage_filter = rosbag2_py.StorageFilter(topics=['BBB', 'GGG'])
     reader.set_filter(storage_filter)
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'GGG'
-    assert recv_ts == 1822
+    assert t == 1822
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'GGG'
-    assert recv_ts == 1822
+    assert t == 1822
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'BBB'
-    assert recv_ts == 1826
+    assert t == 1826
 
 
 @pytest.mark.parametrize('storage_id', TESTED_STORAGE_IDS)
@@ -120,22 +120,22 @@ def test_seek_backward(storage_id):
     reader.seek(1822)
     storage_filter = rosbag2_py.StorageFilter(topics=['BBB', 'GGG'])
     reader.set_filter(storage_filter)
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     # seek backwards & filter preserved
     reader.seek(1408)
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'BBB'
-    assert recv_ts == 1408
+    assert t == 1408
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'GGG'
-    assert recv_ts == 1408
+    assert t == 1408
 
-    (topic, data, recv_ts, send_ts) = reader.read_next_ext()
+    (topic, data, t) = reader.read_next()
 
     assert topic == 'BBB'
-    assert recv_ts == 1413
+    assert t == 1413

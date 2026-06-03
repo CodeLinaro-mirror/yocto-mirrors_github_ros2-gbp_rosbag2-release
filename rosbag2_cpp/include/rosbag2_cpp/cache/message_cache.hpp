@@ -71,13 +71,12 @@ class ROSBAG2_CPP_PUBLIC MessageCache
   : public MessageCacheInterface
 {
 public:
-  explicit MessageCache(size_t max_buffer_size, uint32_t max_buffer_duration = 0);
+  explicit MessageCache(size_t max_buffer_size);
 
   ~MessageCache() override;
 
   /// Puts msg into primary buffer. With full cache, msg is ignored and counted as lost
-  /// \return True if message was successfully pushed, false if the buffer is full.
-  bool push(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> msg) override;
+  void push(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> msg) override;
 
   /// Gets a consumer buffer.
   /// In this greedy implementation, swap buffers before providing the buffer.

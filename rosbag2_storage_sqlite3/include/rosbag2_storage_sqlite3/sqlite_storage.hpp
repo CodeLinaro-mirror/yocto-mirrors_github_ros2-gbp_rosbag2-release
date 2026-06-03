@@ -69,11 +69,6 @@ public:
     const std::vector<std::shared_ptr<const rosbag2_storage::SerializedBagMessage>> & messages)
   override;
 
-  bool write_message(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> message) override;
-
-  std::vector<size_t>
-  write_messages(const rosbag2_storage::SerializedBagMessages & messages) override;
-
   bool set_read_order(const rosbag2_storage::ReadOrder &) override;
 
   bool has_next() override;
@@ -130,7 +125,7 @@ private:
   void fill_topics_and_types();
   void activate_transaction();
   void commit_transaction();
-  bool write_locked(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> message)
+  void write_locked(std::shared_ptr<const rosbag2_storage::SerializedBagMessage> message)
   RCPPUTILS_TSA_REQUIRES(db_read_write_mutex_);
   int get_last_rowid();
   int read_db_schema_version();

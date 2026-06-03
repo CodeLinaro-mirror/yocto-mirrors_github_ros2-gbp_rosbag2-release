@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.5)
 project(rosbag2_test_common)
 
 # Default to C99
@@ -23,7 +23,6 @@ endif()
 
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
-find_package(rclcpp_action REQUIRED)
 find_package(rcutils REQUIRED)
 find_package(rcpputils REQUIRED)
 find_package(test_msgs REQUIRED)
@@ -34,9 +33,8 @@ target_include_directories(${PROJECT_NAME} INTERFACE
   $<INSTALL_INTERFACE:include/${PROJECT_NAME}>)
 target_link_libraries(${PROJECT_NAME} INTERFACE
   rclcpp::rclcpp
-  rclcpp_action::rclcpp_action
   rcutils::rcutils
-  test_msgs::test_msgs
+  ${test_msgs_TARGETS}
 )
 
 install(
@@ -53,7 +51,7 @@ endif()
 
 ament_python_install_package(${PROJECT_NAME})
 
-ament_export_dependencies(rclcpp rclcpp_action rcutils test_msgs)
+ament_export_dependencies(rclcpp rcutils test_msgs)
 
 # Export old-style CMake variables
 ament_export_include_directories("include/${PROJECT_NAME}")

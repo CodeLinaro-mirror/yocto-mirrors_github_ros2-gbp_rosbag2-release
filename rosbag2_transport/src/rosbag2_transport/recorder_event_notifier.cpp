@@ -22,16 +22,12 @@
 namespace rosbag2_transport
 {
 
+
 RecorderEventNotifier::RecorderEventNotifier(
   rclcpp::Node * node,
-  const rosbag2_transport::RecordOptions & record_options,
-  RclcppPublisherWrapper<rosbag2_interfaces::msg::WriteSplitEvent>::SharedPtr split_event_pub,
-  RclcppPublisherWrapper<rosbag2_interfaces::msg::MessagesLostEvent>::SharedPtr msgs_lost_event_pub)
+  const rosbag2_transport::RecordOptions & record_options)
 {
-  pimpl_ = std::make_unique<RecorderEventNotifierImpl>(node,
-                                                       record_options,
-                                                       std::move(split_event_pub),
-                                                       std::move(msgs_lost_event_pub));
+  pimpl_ = std::make_unique<RecorderEventNotifierImpl>(node, record_options);
 }
 
 RecorderEventNotifier::~RecorderEventNotifier()
@@ -52,12 +48,6 @@ void RecorderEventNotifier::on_bag_split_in_recorder(
   pimpl_->on_bag_split_in_recorder(bag_split_info);
 }
 
-void RecorderEventNotifier::on_messages_lost_in_recorder(
-  const std::vector<rosbag2_cpp::bag_events::MessagesLostInfo> & msgs_lost_info)
-{
-  pimpl_->on_messages_lost_in_recorder(msgs_lost_info);
-}
-
 void RecorderEventNotifier::on_messages_lost_in_transport(
   const std::string & topic_name,
   const rclcpp::QOSMessageLostInfo & qos_msgs_lost_info)
@@ -70,19 +60,9 @@ uint64_t RecorderEventNotifier::get_total_num_messages_lost_in_transport() const
   return pimpl_->get_total_num_messages_lost_in_transport();
 }
 
-uint64_t RecorderEventNotifier::get_total_num_messages_lost_in_recorder() const
-{
-  return pimpl_->get_total_num_messages_lost_in_recorder();
-}
-
 void RecorderEventNotifier::reset_total_num_messages_lost_in_transport()
 {
   pimpl_->reset_total_num_messages_lost_in_transport();
-}
-
-void RecorderEventNotifier::reset_total_num_messages_lost_in_recorder()
-{
-  pimpl_->reset_total_num_messages_lost_in_recorder();
 }
 
 const char * RecorderEventNotifier::get_default_write_split_topic_name()
@@ -90,29 +70,9 @@ const char * RecorderEventNotifier::get_default_write_split_topic_name()
   return RecorderEventNotifierImpl::kDefaultWriteSplitTopicName;
 }
 
-const char * RecorderEventNotifier::get_default_messages_lost_topic_name()
-{
-  return RecorderEventNotifierImpl::kDefaultMessagesLostTopicName;
-}
-
-std::string_view RecorderEventNotifier::get_write_split_topic_name() const
-{
-  return pimpl_->get_write_split_topic_name();
-}
-
-std::string_view RecorderEventNotifier::get_messages_lost_topic_name() const
-{
-  return pimpl_->get_messages_lost_topic_name();
-}
-
 rclcpp::QoS RecorderEventNotifier::get_write_split_qos() const
 {
   return pimpl_->get_write_split_qos();
-}
-
-rclcpp::QoS RecorderEventNotifier::get_messages_lost_qos() const
-{
-  return pimpl_->get_messages_lost_qos();
 }
 
 }  // namespace rosbag2_transport
