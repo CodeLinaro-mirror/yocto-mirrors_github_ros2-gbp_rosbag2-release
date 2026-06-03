@@ -1,4 +1,4 @@
-From 6e9949083c59f51252de72873db4f96f2d2f7340 Mon Sep 17 00:00:00 2001
+From 847625df0cc8b6b54834fc07de7c6d7c346bdca4 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Steven!=20Ragnar=C3=B6k?=
  <nuclearsandwich@users.noreply.github.com>
 Date: Mon, 11 Mar 2024 15:23:51 -0700
@@ -7,6 +7,8 @@ Subject: [PATCH] Override FetchContent flag to make sure that content is
 
 This flag now seems to be ON by default in our deb builds but our vendor
 packages do not currently pre-populate fetchcontent contents.
+
+Signed-off-by: Marco A. Gutierrez <marcogg@marcogg.com>
 ---
  debian/rules.em | 1 +
  1 file changed, 1 insertion(+)
